@@ -1,0 +1,215 @@
+{
+  "dataset": {
+    "source": "/Users/yugantverma/Desktop/project/heart_disease_prediction/data/heart.csv",
+    "rows_before_duplicates_removed": 1025,
+    "rows_after_duplicates_removed": 302,
+    "duplicates_removed": 723,
+    "feature_count": 13,
+    "target_distribution": {
+      "0": 138,
+      "1": 164
+    },
+    "training_target_mapping": {
+      "0": "No Disease",
+      "1": "Disease"
+    }
+  },
+  "best_model": "Random Forest",
+  "best_model_selection": "explainable_model_then_test_roc_auc_then_accuracy_then_f1",
+  "best_test_accuracy": 0.8033,
+  "best_model_feature_importance": [
+    {
+      "feature": "ca",
+      "importance": 0.154136
+    },
+    {
+      "feature": "cp",
+      "importance": 0.13991
+    },
+    {
+      "feature": "oldpeak",
+      "importance": 0.133975
+    },
+    {
+      "feature": "thal",
+      "importance": 0.118671
+    },
+    {
+      "feature": "thalach",
+      "importance": 0.109867
+    },
+    {
+      "feature": "exang",
+      "importance": 0.087789
+    },
+    {
+      "feature": "age",
+      "importance": 0.06822
+    },
+    {
+      "feature": "trestbps",
+      "importance": 0.051952
+    },
+    {
+      "feature": "chol",
+      "importance": 0.049327
+    },
+    {
+      "feature": "slope",
+      "importance": 0.040989
+    },
+    {
+      "feature": "sex",
+      "importance": 0.028303
+    },
+    {
+      "feature": "restecg",
+      "importance": 0.011946
+    },
+    {
+      "feature": "fbs",
+      "importance": 0.004915
+    }
+  ],
+  "models": {
+    "KNN": {
+      "test_accuracy": 0.8197,
+      "test_precision": 0.8696,
+      "test_recall": 0.7143,
+      "test_f1": 0.7843,
+      "test_roc_auc": 0.9085,
+      "cv_best_accuracy": 0.8423,
+      "best_parameters": {
+        "model__metric": "manhattan",
+        "model__n_neighbors": 11,
+        "model__weights": "uniform"
+      },
+      "confusion_matrix": [
+        [
+          30,
+          3
+        ],
+        [
+          8,
+          20
+        ]
+      ]
+    },
+    "Decision Tree": {
+      "test_accuracy": 0.8361,
+      "test_precision": 0.8214,
+      "test_recall": 0.8214,
+      "test_f1": 0.8214,
+      "test_roc_auc": 0.862,
+      "cv_best_accuracy": 0.8094,
+      "best_parameters": {
+        "model__max_depth": null,
+        "model__min_samples_leaf": 4,
+        "model__min_samples_split": 10
+      },
+      "confusion_matrix": [
+        [
+          28,
+          5
+        ],
+        [
+          5,
+          23
+        ]
+      ]
+    },
+    "Random Forest": {
+      "test_accuracy": 0.8033,
+      "test_precision": 0.7105,
+      "test_recall": 0.9643,
+      "test_f1": 0.8182,
+      "test_roc_auc": 0.9113,
+      "cv_best_accuracy": 0.8466,
+      "best_parameters": {
+        "model__max_depth": 5,
+        "model__min_samples_leaf": 1,
+        "model__min_samples_split": 5,
+        "model__n_estimators": 100
+      },
+      "confusion_matrix": [
+        [
+          22,
+          11
+        ],
+        [
+          1,
+          27
+        ]
+      ],
+      "probability_calibration": "clinically_monotonic_floor_over_random_forest"
+    },
+    "Gradient Boosting": {
+      "test_accuracy": 0.8033,
+      "test_precision": 0.7667,
+      "test_recall": 0.8214,
+      "test_f1": 0.7931,
+      "test_roc_auc": 0.8669,
+      "cv_best_accuracy": 0.8633,
+      "best_parameters": {
+        "model__learning_rate": 0.1,
+        "model__max_depth": 1,
+        "model__n_estimators": 100,
+        "model__subsample": 1.0
+      },
+      "confusion_matrix": [
+        [
+          26,
+          7
+        ],
+        [
+          5,
+          23
+        ]
+      ]
+    },
+    "AdaBoost": {
+      "test_accuracy": 0.8197,
+      "test_precision": 0.7931,
+      "test_recall": 0.8214,
+      "test_f1": 0.807,
+      "test_roc_auc": 0.8626,
+      "cv_best_accuracy": 0.8632,
+      "best_parameters": {
+        "model__learning_rate": 0.1,
+        "model__n_estimators": 50
+      },
+      "confusion_matrix": [
+        [
+          27,
+          6
+        ],
+        [
+          5,
+          23
+        ]
+      ]
+    },
+    "Logistic Regression": {
+      "test_accuracy": 0.7869,
+      "test_precision": 0.7778,
+      "test_recall": 0.75,
+      "test_f1": 0.7636,
+      "test_roc_auc": 0.895,
+      "cv_best_accuracy": 0.8344,
+      "best_parameters": {
+        "model__C": 0.1,
+        "model__solver": "liblinear"
+      },
+      "confusion_matrix": [
+        [
+          27,
+          6
+        ],
+        [
+          7,
+          21
+        ]
+      ]
+    }
+  }
+}

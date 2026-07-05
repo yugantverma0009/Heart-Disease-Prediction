@@ -1,0 +1,15 @@
+{
+  "source": "/Users/yugantverma/Desktop/project/heart_disease_prediction/data/heart.csv",
+  "rows_before_duplicates_removed": 1025,
+  "rows_after_duplicates_removed": 302,
+  "duplicates_removed": 723,
+  "feature_count": 13,
+  "target_distribution": {
+    "0": 138,
+    "1": 164
+  },
+  "training_target_mapping": {
+    "0": "No Disease",
+    "1": "Disease"
+  }
+}
