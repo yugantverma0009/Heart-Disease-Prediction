@@ -311,8 +311,42 @@ def apply_page_style() -> None:
             color: var(--text) !important;
             font-weight: 650;
         }
-        .stProgress > div > div > div > div {
-            background-color: var(--accent);
+        .risk-meter {
+            --value: 0%;
+            position: relative;
+            height: 0.55rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.78);
+            margin: 1.4rem 0 2rem;
+            outline: none;
+        }
+        .risk-meter-fill {
+            width: var(--value);
+            height: 100%;
+            border-radius: inherit;
+            background: var(--accent);
+        }
+        .risk-meter-label {
+            position: absolute;
+            left: clamp(1.5rem, var(--value), calc(100% - 1.5rem));
+            bottom: calc(100% + 0.45rem);
+            transform: translateX(-50%);
+            border-radius: 999px;
+            background: var(--text);
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1;
+            padding: 0.28rem 0.45rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 120ms ease;
+            white-space: nowrap;
+        }
+        .risk-meter:hover .risk-meter-label,
+        .risk-meter:focus .risk-meter-label,
+        .risk-meter:active .risk-meter-label {
+            opacity: 1;
         }
         @media (max-width: 900px) {
             .card-grid {
@@ -389,6 +423,18 @@ def risk_label(label: str) -> str:
     if label in {"Low", "Moderate", "High"}:
         return f"{label} Risk"
     return label
+
+
+def risk_meter(probability: float) -> str:
+    bounded_probability = min(max(probability, 0.0), 1.0)
+    percent = bounded_probability * 100
+    percent_text = f"{percent:.1f}%"
+    return dedent(f"""
+    <div class="risk-meter" style="--value: {percent:.1f}%;" role="meter" aria-label="Estimated heart disease probability" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{percent:.1f}" tabindex="0">
+        <div class="risk-meter-fill"></div>
+        <span class="risk-meter-label">{percent_text}</span>
+    </div>
+    """).strip()
 
 
 def build_input() -> pd.DataFrame:
@@ -552,45 +598,7 @@ def predict_patient(artifact: dict, patient: pd.DataFrame) -> dict:
         "prediction": prediction,
         "probability": probability,
         "risk_label": label,
-        "explanation": explain_prediction(pipeline, patient),
     }
-
-
-def explain_prediction(pipeline: Pipeline, patient: pd.DataFrame) -> list[dict[str, float | str]]:
-    estimator = pipeline.named_steps["model"]
-    preprocessor = pipeline.named_steps["preprocess"]
-    transformed = preprocessor.transform(patient)
-
-    try:
-        import shap
-
-        explainer = shap.TreeExplainer(estimator)
-        shap_values = explainer.shap_values(transformed)
-        if isinstance(shap_values, list):
-            values = shap_values[1][0]
-        else:
-            values = shap_values[0]
-        explanation_type = "SHAP value"
-        scores = values
-    except Exception:
-        if not hasattr(estimator, "feature_importances_"):
-            return []
-        explanation_type = "Feature importance"
-        scores = estimator.feature_importances_
-
-    ranked = sorted(
-        (
-            {
-                "feature": feature,
-                "influence": round(float(abs(score)), 6),
-                "method": explanation_type,
-            }
-            for feature, score in zip(FEATURE_COLUMNS, scores)
-        ),
-        key=lambda item: item["influence"],
-        reverse=True,
-    )
-    return ranked[:5]
 
 
 def show_result(artifact: dict, result: dict) -> None:
@@ -619,12 +627,7 @@ def show_result(artifact: dict, result: dict) -> None:
         unsafe_allow_html=True,
     )
 
-    st.progress(min(max(probability, 0.0), 1.0))
-
-    explanation = result.get("explanation") or []
-    if explanation:
-        st.subheader("Top Influencing Features")
-        st.dataframe(pd.DataFrame(explanation), width="stretch", hide_index=True)
+    st.markdown(risk_meter(probability), unsafe_allow_html=True)
 
     st.caption("This project is for learning only. It is not a medical diagnosis tool.")
 
